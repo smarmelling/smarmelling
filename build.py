@@ -72,7 +72,8 @@ def format_rfc822(date_str):
 
 # ── HTML templates ────────────────────────────────────────────────────────────
 
-def post_html(title, date_formatted, content_html):
+def post_html(title, date_formatted, content_html, slug):
+    post_url = f"{SITE_URL}/posts/{slug}.html"
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -95,6 +96,22 @@ def post_html(title, date_formatted, content_html):
     </div>
     <div class="prose">
       {content_html}
+    </div>
+    <div class="comments">
+      <div id="disqus_thread"></div>
+      <script>
+        var disqus_config = function () {{
+          this.page.url = "{post_url}";
+          this.page.identifier = "{slug}";
+        }};
+        (function() {{
+          var d = document, s = d.createElement('script');
+          s.src = 'https://smarmelling.disqus.com/embed.js';
+          s.setAttribute('data-timestamp', +new Date());
+          (d.head || d.body).appendChild(s);
+        }})();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
     </div>
   </div>
 </body>
@@ -199,7 +216,7 @@ def main():
         date_fmt = format_date(date_str)
 
         out = POSTS_DIR / f"{slug}.html"
-        out.write_text(post_html(title, date_fmt, content), encoding="utf-8")
+        out.write_text(post_html(title, date_fmt, content, slug), encoding="utf-8")
         print(f"  built  posts/{slug}.html")
 
         posts.append({"slug": slug, "title": title, "date": date_str, "date_formatted": date_fmt})
