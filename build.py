@@ -31,6 +31,7 @@ except ImportError:
 
 ROOT = Path(__file__).parent
 POSTS_DIR = ROOT / "posts"
+SITE_URL = "https://smarmelling.com"
 
 
 # ── helpers ──────────────────────────────────────────────────────────────────
@@ -55,6 +56,15 @@ def format_date(date_str):
     for fmt in ("%Y-%m-%d", "%Y/%m/%d", "%d-%m-%Y"):
         try:
             return datetime.strptime(date_str, fmt).strftime("%b %d, %Y")
+        except ValueError:
+            continue
+    return date_str
+
+
+def format_rfc822(date_str):
+    for fmt in ("%Y-%m-%d", "%Y/%m/%d", "%d-%m-%Y"):
+        try:
+            return datetime.strptime(date_str, fmt).strftime("%a, %d %b %Y 00:00:00 +0000")
         except ValueError:
             continue
     return date_str
@@ -125,16 +135,40 @@ def index_html(posts):
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="alternate" type="application/rss+xml" title="matteo" href="{SITE_URL}/feed.xml">
 </head>
 <body>
   <div class="container">
     <div class="site-name"><a href="index.html">&lt;matteo&gt;</a></div>
     <p class="intro">{INTRO}</p>
-    <p class="misc-link"><a href="more.html">misc</a></p>
+    <p class="more-link"><a href="more.html">more</a></p>
+    <p class="more-link"><a href="feed.xml">rss</a></p>
 {post_list}
   </div>
 </body>
 </html>
+"""
+
+
+def feed_xml(posts):
+    items = "\n".join(
+        f"  <item>\n"
+        f"    <title>{p['title']}</title>\n"
+        f"    <link>{SITE_URL}/posts/{p['slug']}.html</link>\n"
+        f"    <guid>{SITE_URL}/posts/{p['slug']}.html</guid>\n"
+        f"    <pubDate>{format_rfc822(p['date'])}</pubDate>\n"
+        f"  </item>"
+        for p in posts
+    )
+    return f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>matteo</title>
+    <link>{SITE_URL}</link>
+    <description>matteo's blog</description>
+{items}
+  </channel>
+</rss>
 """
 
 
@@ -175,6 +209,9 @@ def main():
     (ROOT / "index.html").write_text(index_html(posts), encoding="utf-8")
     n = len(posts)
     print(f"  wrote  index.html  ({n} post{'s' if n != 1 else ''})")
+
+    (ROOT / "feed.xml").write_text(feed_xml(posts), encoding="utf-8")
+    print(f"  wrote  feed.xml")
 
 
 if __name__ == "__main__":
