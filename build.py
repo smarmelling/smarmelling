@@ -54,7 +54,7 @@ def parse_front_matter(text):
 def format_date(date_str):
     for fmt in ("%Y-%m-%d", "%Y/%m/%d", "%d-%m-%Y"):
         try:
-            return datetime.strptime(date_str, fmt).strftime("%b %Y")
+            return datetime.strptime(date_str, fmt).strftime("%b %d, %Y")
         except ValueError:
             continue
     return date_str
