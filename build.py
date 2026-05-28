@@ -79,7 +79,7 @@ def post_html(title, date_formatted, content_html, slug):
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>&lt;matteo&gt; — {title}</title>
+  <title>&lt;smarmelling&gt; — {title}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -88,7 +88,7 @@ def post_html(title, date_formatted, content_html, slug):
 <body>
   <div class="container">
     <div class="site-name">
-      <a href="../index.html">&lt;matteo&gt;</a>
+      <a href="../index.html">&lt;smarmelling&gt;</a>
     </div>
     <div class="post-header">
       <h1 class="post-heading">{title}</h1>
@@ -147,16 +147,16 @@ def index_html(posts):
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>&lt;matteo&gt;</title>
+  <title>&lt;smarmelling&gt;</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="alternate" type="application/rss+xml" title="matteo" href="{SITE_URL}/feed.xml">
+  <link rel="alternate" type="application/rss+xml" title="smarmelling" href="{SITE_URL}/feed.xml">
 </head>
 <body>
   <div class="container">
-    <div class="site-name"><a href="index.html">&lt;matteo&gt;</a></div>
+    <div class="site-name"><a href="index.html">&lt;smarmelling&gt;</a></div>
     <p class="intro">{INTRO}</p>
     <p class="more-link"><a href="more.html">more</a></p>
     <p class="more-link"><a href="feed.xml">rss</a></p>
