@@ -1,6 +1,7 @@
 ---
 title: Hello world!
 date: 2026-05-10
+description: Matteo's first blog post, introducing smarmelling and the ideas behind the site.
 ---
 
 ## Hello world!
