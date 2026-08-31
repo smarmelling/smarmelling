@@ -34,7 +34,7 @@
 <li>A hard drive</li>
 <li>Some cloud provider</li>
 </ol>
-<p>This post will go in detail on the choices I made for each of these layers. I will preface that I might have made many mistakes, and only mean to share this as my personal journey to it and in no way something to emulate.</p>
+<p>This post will go in detail on the choices I made for each of these layers. I will preface that I might have made many mistakes, and only mean to share this as my personal journey to it and in no way something to emulate (not that anyone would).</p>
 <h2>My layers</h2>
 <h3>1. A working layer</h3>
 <p>When I started planning my working layer I realized the ideal world was one where I could sync across all my drivers including my two mini-pcs and my laptop, as well as access those same files from my phone and my tablet.</p>
@@ -49,7 +49,7 @@
 <p>The phone is a whole other beast. It does not have enough storage to run syncthing and store all the files I have on the other machines, and even if it did good luck getting that to work. The size of <code>Sync</code> is actually fairly small for me, it's just 12GB, but it's not small enough to fit on my 128GB phone. I have too many apps unfortunately.</p>
 <p>Side note: you might laugh at me for only having 12GB of content, but I like to be a minimalist and only store what I actually need, and I try to curate this folder fairly often.</p>
 <p>I do have an archive folder that I keep at the home folder of my M3 that keeps logs of files I do not use anymore.</p>
-<p>The solution I adopted was to set up Tailscale on my M3, connect to Tailscale from my iPhone and use Runestone to view the files locally even though they don't live locally. The disadvantage of this is that you need a Tailscale connection all the times you want to access the files, but other than that it works wonders.</p>
+<p>The solution I adopted was to set up <a href="https://github.com/tailscale/tailscale">Tailscale</a> on my M3, connect to Tailscale from my iPhone and use Runestone to view the files locally even though they don't live locally. The disadvantage of this is that you need a Tailscale connection all the times you want to access the files, but other than that it works wonders.</p>
 <p>I thought originally that my android tablet would be easier to set up for backup because of the wall garden of iOS. But I couldn't have been more mistaken. It turns out there is no Runestone equivalent that solves all the problems I need. This meant I had to create an insane workaround that is as ugly as it is fragile. But for now it works.</p>
 <p>What I had to was set up Tailscale, connect that to an app called Total Commander - which is just a file reader - then get its extension for the LAN that would allow me to access my local files coming from Tailscale. Given Total Commander is just to read files in order to modify something I had to get an other app to open those files in. I tried a bunch of markdown readers and they all sucked, so I landed on Acode but will likely look again soon for better alternatives. What's more Total commander does not allow to create new files so if I want to create a new file the only workaround I have found is to create a copy of a file I have and then modify that. I understand this is so ugly, please don't judge.</p>
 <blockquote>

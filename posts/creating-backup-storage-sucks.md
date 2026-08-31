@@ -18,7 +18,7 @@ What that meant for me was:
 2. A hard drive
 3. Some cloud provider
 
-This post will go in detail on the choices I made for each of these layers. I will preface that I might have made many mistakes, and only mean to share this as my personal journey to it and in no way something to emulate.
+This post will go in detail on the choices I made for each of these layers. I will preface that I might have made many mistakes, and only mean to share this as my personal journey to it and in no way something to emulate (not that anyone would).
 
 ## My layers
 ### 1. A working layer
@@ -42,7 +42,7 @@ Side note: you might laugh at me for only having 12GB of content, but I like to 
 
 I do have an archive folder that I keep at the home folder of my M3 that keeps logs of files I do not use anymore.
 
-The solution I adopted was to set up Tailscale on my M3, connect to Tailscale from my iPhone and use Runestone to view the files locally even though they don't live locally. The disadvantage of this is that you need a Tailscale connection all the times you want to access the files, but other than that it works wonders.
+The solution I adopted was to set up [Tailscale](https://github.com/tailscale/tailscale) on my M3, connect to Tailscale from my iPhone and use Runestone to view the files locally even though they don't live locally. The disadvantage of this is that you need a Tailscale connection all the times you want to access the files, but other than that it works wonders.
 
 I thought originally that my android tablet would be easier to set up for backup because of the wall garden of iOS. But I couldn't have been more mistaken. It turns out there is no Runestone equivalent that solves all the problems I need. This meant I had to create an insane workaround that is as ugly as it is fragile. But for now it works.
 
