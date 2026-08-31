@@ -33,10 +33,11 @@ except ImportError:
 ROOT = Path(__file__).parent
 POSTS_DIR = ROOT / "posts"
 SITE_URL = "https://smarmelling.com"
-SITE_DESCRIPTION = "Matteo's personal blog about life, technology, philosophy, and other things worth sharing."
+SITE_DESCRIPTION = "Personal blog"
 
 
 # ── helpers ──────────────────────────────────────────────────────────────────
+
 
 def parse_front_matter(text):
     """Return (meta_dict, body) from a --- delimited front matter block."""
@@ -51,7 +52,7 @@ def parse_front_matter(text):
         if ":" in line:
             k, _, v = line.partition(":")
             meta[k.strip()] = v.strip()
-    return meta, text[end + 4:].strip()
+    return meta, text[end + 4 :].strip()
 
 
 def format_date(date_str):
@@ -66,7 +67,9 @@ def format_date(date_str):
 def format_rfc822(date_str):
     for fmt in ("%Y-%m-%d", "%Y/%m/%d", "%d-%m-%Y"):
         try:
-            return datetime.strptime(date_str, fmt).strftime("%a, %d %b %Y 00:00:00 +0000")
+            return datetime.strptime(date_str, fmt).strftime(
+                "%a, %d %b %Y 00:00:00 +0000"
+            )
         except ValueError:
             continue
     return date_str
@@ -82,6 +85,7 @@ def format_sitemap_date(date_str):
 
 
 # ── HTML templates ────────────────────────────────────────────────────────────
+
 
 def post_html(title, date_formatted, description, content_html, slug):
     post_url = f"{SITE_URL}/posts/{slug}.html"
@@ -147,8 +151,8 @@ def index_html(posts):
             f'        <a href="posts/{p["slug"]}.html" class="post-link">\n'
             f'          <span class="post-title">{p["title"]}</span>\n'
             f'          <span class="post-date">{p["date_formatted"]}</span>\n'
-            f'        </a>\n'
-            f'      </li>'
+            f"        </a>\n"
+            f"      </li>"
             for p in posts
         )
         post_list = f'    <ul class="post-list">\n{items}\n    </ul>'
@@ -172,7 +176,7 @@ def index_html(posts):
 <body>
   <div class="container">
     <div class="site-name"><a href="index.html">&lt;smarmelling&gt;</a></div>
-    <p class="intro">{INTRO}</p>
+    <!-- <p class="intro">{INTRO}</p> -->
     <!-- <p class="more-link"><a href="archive/more.html">more</a></p> -->
     <p class="more-link"><a href="feed.xml">rss</a></p>
 {post_list}
@@ -232,6 +236,7 @@ Sitemap: {SITE_URL}/sitemap.xml
 
 # ── main ─────────────────────────────────────────────────────────────────────
 
+
 def main():
     POSTS_DIR.mkdir(exist_ok=True)
     converter = md_lib.Markdown(extensions=["fenced_code", "tables"])
@@ -258,10 +263,14 @@ def main():
         date_fmt = format_date(date_str)
 
         out = POSTS_DIR / f"{slug}.html"
-        out.write_text(post_html(title, date_fmt, description, content, slug), encoding="utf-8")
+        out.write_text(
+            post_html(title, date_fmt, description, content, slug), encoding="utf-8"
+        )
         print(f"  built  posts/{slug}.html")
 
-        posts.append({"slug": slug, "title": title, "date": date_str, "date_formatted": date_fmt})
+        posts.append(
+            {"slug": slug, "title": title, "date": date_str, "date_formatted": date_fmt}
+        )
 
     posts.sort(key=lambda p: p["date"], reverse=True)
 

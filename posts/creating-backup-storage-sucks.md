@@ -1,0 +1,102 @@
+---
+title: Creating backup storage sucks 
+date: 2026-09-01
+description: Took way more than I thought. But it was fun
+---
+
+## Personal storage
+Creating storage and syncing it is  one of those activities where something is always off, doesn't work like you want, and is not working at the time when you need it. So I decided I wanted to fix it to the extent I could for my machines.
+
+In the last few months I have learned a lot of useful Linux things that I hoped would help me sync appropriately all useful files across my devices. In particular, I wanted to use this knwoledge to be able to do this completely for free. I had no interest in giving any more money to any provider to just be able to see my own files. The same files I created and owned. I had done this mistake with Google One storage once and was not willing to make it again.
+
+I was familiar with the standard 3-2-1 backup technique, but I had never quite tried to implement it or really thought hard about it. So this was the time.
+> For those that are not familiar, 3-2-1 backup means storage should be in: THREE copies, on TWO different storage media, with ONE copy offsite.
+
+What that meant for me was:
+
+1. A working layer
+2. A hard drive
+3. Some cloud provider
+
+This post will go in detail on the choices I made for each of these layers. I will preface that I might have made many mistakes, and only mean to share this as my personal journey to it and in no way something to emulate.
+
+## My layers
+### 1. A working layer
+When I started planning my working layer I realized the ideal world was one where I could sync across all my drivers including my two mini-pcs and my laptop, as well as access those same files from my phone and my tablet.
+
+I tend to work from two main workstation. My X1 Minisforum that is my main driver and my Lenovo laptop that I use when I am not working at home. Technically I have my work computer but that doesn't count for the purposes of storage since it has completely separate data.
+
+All these devices have very different constraints and so this warranted some thought on how to orchestrate them. This is what I landed on: My main Minisforum mini-pc holds the ground truth of the files, and acts as the daily driver. It contains at the home directory the folder `Sync` which is what gets synced across all devices and what needs to be maintained.
+
+This is then synced via [Syncthing](https://syncthing.net/) to my second mini-pc, a GMKtec M3 that acts as my NAS and is always on. I mostly only access this mini-pc via ssh or tailscale from other devices. 
+
+And finally I sync my laptop via syncthing to `Sync`. Now my laptop is alas a Windows and I have been lazy to install Linux on it (that's a project for the future) and so was a slightly different procedure to install syncthing on it, but seemed to work fine (which I was very surprised given it was Windows).
+
+> Importantly syncthing is not back-up. Each of these devices holds locally a copy of the files but they sync to each other, so if one gets corrupted and pushes the changes to the others, the others also get corrupted. So this counts just as one layer. These machines are not back-up.
+
+Syncthing works very well, its only constraint is that it does need the devices to be often on if you want consistent syncing.
+
+The phone is a whole other beast. It does not have enough storage to run syncthing and store all the files I have on the other machines, and even if it did good luck getting that to work. The size of `Sync` is actually fairly small for me, it's just 12GB, but it's not small enough to fit on my 128GB phone. I have too many apps unfortunately.
+
+Side note: you might laugh at me for only having 12GB of content, but I like to be a minimalist and only store what I actually need, and I try to curate this folder fairly often.
+
+I do have an archive folder that I keep at the home folder of my M3 that keeps logs of files I do not use anymore.
+
+The solution I adopted was to set up Tailscale on my M3, connect to Tailscale from my iPhone and use Runestone to view the files locally even though they don't live locally. The disadvantage of this is that you need a Tailscale connection all the times you want to access the files, but other than that it works wonders.
+
+I thought originally that my android tablet would be easier to set up for backup because of the wall garden of iOS. But I couldn't have been more mistaken. It turns out there is no Runestone equivalent that solves all the problems I need. This meant I had to create an insane workaround that is as ugly as it is fragile. But for now it works.
+
+What I had to was set up Tailscale, connect that to an app called Total Commander - which is just a file reader - then get its extension for the LAN that would allow me to access my local files coming from Tailscale. Given Total Commander is just to read files in order to modify something I had to get an other app to open those files in. I tried a bunch of markdown readers and they all sucked, so I landed on Acode but will likely look again soon for better alternatives. What's more Total commander does not allow to create new files so if I want to create a new file the only workaround I have found is to create a copy of a file I have and then modify that. I understand this is so ugly, please don't judge.
+
+> In all of this my takeaway was: Tailscale is the true king; syncthing is amazing; iOS is better than I remembered; Android has gotten almost as bad as Windows.
+
+### 2. A hard drive
+This layer is just a static hard drive that can just hold a simple backup.
+
+I wanted to use [restic](https://restic.net/) for this and make sure the backups are timely and efficient, which led me down a rabbit hole about what is the best file system for a hard drive. It turns out my hard drive was defaulting to FAT32 which made it feel like I was backing up the whole of Netflix library when I was just moving around 12GB of data. After some research it turned out that if I wanted to maintain easy compatibility with Windows I couldn't use the superior ext4 and had to default instead to exFAT which was slightly superior than FAT32 but vastly inferior than ext4. So after multiple swearing of 'Windows sucks' I gave up and accepted to move to exFAT. Upon further research I realized that the advantage of FAT32 were not really things I cared about, so I got lazy and moved on with FAT32 instead.
+
+The other step to plan was how am I was going to automate the backups. I was recommended to use restic and so I tried. It created a nice compressed, encrypted folder that has all the information. And then I set up a systemd to back up the `Sync` folder every week on Sunday night.
+
+restic is truly one of the best things to ever exist for backup. It just works incredibly well for what it has to do. There are some drawbacks, for instance I wasn't expecting the unzipping to take as long as it did, but I guess it really has to compact a lot of information in there. It was able to turn the 12GB of data into almost 6GB with a lot of de-duplication. Now this is if you are doing everything locally, if instead you start to do this via some network things might get a bit more dicey as I was about to see with the third layer.
+
+### 3. Some cloud provider
+This had a lot of constraints. I don't intend to pay any subscriptions which meant I had to play with free storage options. The simplest seemed Google Drive. You get 15GB for free and it has good ways to connect to traditional ways to back up information.
+
+The trouble is that Google Drive shares storage with Gmail, which meant I had to go through the tedious procedure of eliminating unnecessary emails to free up enough space. Once that was done I was left with 10+GB of storage which was enough for another restic backup.
+
+Photos were a bit tricky. I originally had photos backed up from the iPhone Photos app to Google Photos from a time when I was ok paying subscriptions I guess. Migrating would have been a bit long and not that fruitful since I then would have had to copy it back via the backup anyways. So I opted for a slightly different solution: I created a folder inside of `Sync` called `Photos` and used PhotoSync to do the rest. I synced this to the photos which were themselves synced to Google Photos. So I thought I would still be getting the 3-2-1 coverage but in a different way than for `Sync`. Here is how it would work:
+
+1. The working layer receives the photos via PhotoSync through my phone
+2. Instead of the HDD hard drive my laptop acts directly as the third storage location since it possesses the photos locally.
+3. Google Drive still has these via restic.
+
+Hopefully this was all. 
+
+Nope it's not because iOS and Google suck and do not let me do what I want with my own machine and photos. The folder I have is synced with PhotoSync but PhotoSync does not let me do automatic transfers. I just don't care about photos enough to spend time to fix it. So now I have the following horrendous set up:
+
+1. Photos app has all the most recent information
+2. When I have time I will use PhotoSync to manually transfer the photos that I don't have locally in my computer. Even though it's manual this part was actually surprisingly smooth. It's just so stupid that there is no free automated way.
+3. Then this `iPhone` folder is within Sync so it automatically propagates to the HDD and Google Drive. This means Google Drive technically has the images two times. One via Google Photos and one via syncing the `iPhone` folder but I have enough space so it's ok.
+4. Do I like this? No. There are some more satisfying options but I think there comes a point where it's just not worth it for me to spend time updating. So I'll let it be for now.
+
+I then mounted Google Drive to my M3, and tried to use restic to sync. Of course this was also not smooth. It was very slow but it eventually started making progress. It stalled a number of times because of too many request and http latency so I had to start splitting bakcup requests in subfolders of `Sync`. That also was too slow so I decided to give up on restic for Google Drive and really simplify. I zipped the `Sync` folder from my daily driver and copied that through the [rclone](https://rclone.org/) Google Drive instance. Ugly as hell but at least I have a offsite copy. And whenever I want to restore I just re-do this procedure which only takes a few minutes instead of the hours of pain that restic was causing me.  
+
+I didn't even bother to automate the syncing with Google Drive because I was too pissed and the whole thing was so fragile. I'll just do it manually and that will be fine. If I am in a situation where I need to use the offsite copy it will be the least of my problems to have lost a few weeks of work. My understanding is that after the first time the upload should get better because restic will take care of the files that are identical more quickly but I have no proof of that for now.
+
+## Other backup materials
+At this point `Sync` was mostly successful or at least at a point where I felt satisfied and was time to move on to backup some remaining few layers.
+
+At the top of the least was dotfiles. Configs are pretty important since I have spent some time on them by now and would not like to have all that progress be lost (gosh I could not imagine rewriting neovim config). After some research it turned out [chezmoi](https://www.chezmoi.io/) (I know french but did not realize what the name was at first) was one of the most popular options. After a brief set up I realized why. It was very simple yet effective. I pushed everything to github and called it a day.
+
+One of the other materials that I could not figure out how to back up properly is emails. The reason is that there is no clear way to back it up systematically and I don't want to put in `Sync` because otherwise is gets uploaded to Google Drive. I will have to come back to it but it's not anytime soon.
+
+Lastly, I wanted to be able to recover OS states. This machine runs Arch and while it hasn't happened yet I need to always be in acceptance that a new update might mess things up. So having a plan to roll back to a stable state might be helfpul. I installed and set up [Timeshift](https://github.com/linuxmint/timeshift) for this but I haven't really played around with it other than the basic config, and probably won't really have an opinion about it until my Arch dies.
+
+## Bye and AI disclosure
+In this whole procedure there were something things that worked extremly well and some where I had to compromise or give up entirely, which feels like my average outcome with any other type of technology.
+
+Many of these things seem to me very stable at the moment. Others seem very fragile. So this could either be the first and last post on backing up my system or the Part 1 of a long series, only time will tell.
+
+> The most utilized word in this post is "suck" (along with its declied variations "sucks" and "sucked") which sums up this post well.
+
+As an FYI, I used AI extensively to help me navigate through some of the design choices for this backup as well as some techincal implementation of some of these setups. No AI was used in this writing, so if you think the prose sounds like a machine, rest assured that it's just because my writing sucks.

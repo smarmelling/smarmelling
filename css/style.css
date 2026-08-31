@@ -1,11 +1,11 @@
 :root {
   --bg: #ffffff;
-  --text: #111827;
-  --text-muted: #6b7280;
-  --text-subtle: #9ca3af;
-  --border: #e5e7eb;
-  --border-subtle: #f3f4f6;
-  --link: #1d4ed8;
+  --text: #111111;
+  --text-muted: #555555;
+  --text-subtle: #888888;
+  --border: #b8b8b8;
+  --border-subtle: #eeeeee;
+  --link: #111111;
 }
 
 *, *::before, *::after {
@@ -86,15 +86,17 @@ a:hover { opacity: 0.7; }
 }
 
 .prose h2 {
-  font-size: 1.0625rem;
-  margin-top: 2rem;
-  margin-bottom: 0.625rem;
+  font-size: 1.125rem;
+  margin-top: 3.25rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--text);
 }
 
 .prose h3 {
-  font-size: 0.9375rem;
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
 }
 
 .prose ul, .prose ol {
@@ -102,6 +104,10 @@ a:hover { opacity: 0.7; }
 }
 
 .prose li { margin-bottom: 0.25rem; line-height: 1.7; }
+
+.prose ol li::marker {
+  font-weight: 600;
+}
 
 .prose code {
   font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
@@ -127,10 +133,22 @@ a:hover { opacity: 0.7; }
 }
 
 .prose blockquote {
-  border-left: 3px solid var(--border);
+  border-left: 3px solid var(--text);
   padding-left: 1rem;
-  color: var(--text-muted);
-  margin: 1.25rem 0;
+  color: var(--text);
+  margin: 1.75rem 0;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 3rem 0;
+}
+
+.prose strong {
+  font-weight: 700;
 }
 
 /* ── Post page header ── */
