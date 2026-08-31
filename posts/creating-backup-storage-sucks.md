@@ -1,6 +1,6 @@
 ---
 title: Creating backup storage sucks 
-date: 2026-09-01
+date: 2026-08-31
 description: Took way more than I thought. But it was fun
 ---
 
