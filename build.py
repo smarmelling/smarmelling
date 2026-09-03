@@ -34,6 +34,7 @@ ROOT = Path(__file__).parent
 POSTS_DIR = ROOT / "posts"
 SITE_URL = "https://smarmelling.com"
 SITE_DESCRIPTION = "Personal blog"
+GOOGLE_SITE_VERIFICATION = "YCCiJGopQDBoPXqp-kO0a27TJV-fqv1sNejkItfx9qs"
 
 
 # ── helpers ──────────────────────────────────────────────────────────────────
@@ -94,6 +95,7 @@ def post_html(title, date_formatted, description, content_html, slug):
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="{GOOGLE_SITE_VERIFICATION}">
   <title>&lt;smarmelling&gt; — {title}</title>
   <meta name="description" content="{escape(description, quote=True)}">
   <link rel="canonical" href="{post_url}">
@@ -164,6 +166,7 @@ def index_html(posts):
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="{GOOGLE_SITE_VERIFICATION}">
   <title>&lt;smarmelling&gt;</title>
   <meta name="description" content="{escape(SITE_DESCRIPTION, quote=True)}">
   <link rel="canonical" href="{SITE_URL}/">
