@@ -1,0 +1,1 @@
+warching an episodoe of the standup by the primeagean when trash talks about how he diesnt buy a windows because he dowsrnt want the copilot button. then i heard that the copilot button could be repurposed from a tiutube video that was reviewing my own mini minisforum mini pc so i thought why not repurposing it

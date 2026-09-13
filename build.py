@@ -35,6 +35,15 @@ POSTS_DIR = ROOT / "posts"
 SITE_URL = "https://smarmelling.com"
 SITE_DESCRIPTION = "Personal blog"
 GOOGLE_SITE_VERIFICATION = "YCCiJGopQDBoPXqp-kO0a27TJV-fqv1sNejkItfx9qs"
+GOOGLE_TAG = """  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2QSDN6PJ1C"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-2QSDN6PJ1C');
+  </script>"""
 
 
 # ── helpers ──────────────────────────────────────────────────────────────────
@@ -96,13 +105,14 @@ def post_html(title, date_formatted, description, content_html, slug):
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google-site-verification" content="{GOOGLE_SITE_VERIFICATION}">
+{GOOGLE_TAG}
   <title>&lt;smarmelling&gt; — {title}</title>
   <meta name="description" content="{escape(description, quote=True)}">
   <link rel="canonical" href="{post_url}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../style.css">
 </head>
 <body>
   <div class="container">
@@ -167,13 +177,14 @@ def index_html(posts):
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="google-site-verification" content="{GOOGLE_SITE_VERIFICATION}">
+{GOOGLE_TAG}
   <title>&lt;smarmelling&gt;</title>
   <meta name="description" content="{escape(SITE_DESCRIPTION, quote=True)}">
   <link rel="canonical" href="{SITE_URL}/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="style.css">
   <link rel="alternate" type="application/rss+xml" title="smarmelling" href="{SITE_URL}/feed.xml">
 </head>
 <body>
