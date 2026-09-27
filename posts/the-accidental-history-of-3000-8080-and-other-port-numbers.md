@@ -1,0 +1,56 @@
+---
+title: The accidental history of 3000, 8080, and other port numbers
+date: 2026-09-27
+description: Why we all default to the same port numbers
+---
+
+A few days ago I was playing with some docker containers when I hit a common:  
+```Error: port 8081 already in use.```  
+I have gotten a similar message many times before but this time I floated a question: how is it that I was taught to start a port at 8080, 3000, and other popular port numbers, and not some other random ports like 6666 or 1234? Well, this post is about what I found out and my explorations of some ports history.  
+So, first, as a reminder, a port is ["a communication endpoint [...] uniquely identified by a number"](https://en.wikipedia.org/wiki/Port_(computer_networking)). However, ports are not a rare commodity in a computer: there are 65,536 (including 0) of them, of which the set between 1,024 and 49,151 are registered/user ports (i.e. essentially available). So it seems like all programs defaulting to the same 10-20 ports must have some more intricate story than a simple "it is what was available".  
+
+
+## Port 3000
+So let's put ourselves in the shoes of some clever developers of a few decades ago. They are looking for a recognizable port, below 49,151 but above 1,024. Well... 3000. I don't like this story but I fear that's how that port might have come about.  
+An early popularizer of the port was Ruby on rails and it's possible DHH just liked that number. 
+Ruby on rails was a very early case from 2004 of the popular 3000 port. You can see it has 3000 in the [initial commit](https://github.com/rails/rails/blob/db045dbbf60b53dbe013ef25554fd013baf88134/railties/dispatches/dispatch.servlet)
+and an early [documentation](https://guides.rubyonrails.org/v2.3.8/command_line.html) already contains the 3000 port number.  
+However, while probably the biggest early popularizer, Ruby was not the first to use this port. For example, Palantir (not that Palantir but a Linux video/audio streaming server), used port 3000 as its default HTTP port as early as 2002. But [an archived IANA registry from September 2001 already listed several services on port 3000, including HBCI and RemoteWare Client](https://web.archive.org/web/20010519080902id_/http://www.iana.org:80/assignments/port-numbers), and I could not exactly trace back the first documented appearance of that port number, which makes the port number 3000 even more of a mystery to me.
+
+
+## Port 8080
+Among the 0-1023 system ports (those that require administrative privileges) there are a few that are of special importance. In particular port 80 is notable because it's the conventional port where HTTP is listening to. Ok so if you are a protocol that is dealing with HTTP you would ideally like to somehow tie your port to port 80. And that's exactly what CERN HTTPD installation documentation recommended in 1998, for unprivileged test ports “often 8001, 8080, or such”. So you take 80 and add another 80 to follow, and that makes the popular 8080 port.  
+Even before that, Debian netbase 2.14 in 1997-06-16 added webcache 8080/tcp and webcache 8080/udp as “WWW caching service.”, and an archived IANA snapshot from 2001 lists http-alt 8080 as [“HTTP Alternate (see port 80).”](https://web.archive.org/web/20020407174515id_/http://www.iana.org:80/assignments/port-numbers).  
+Finally, [Tomcat’s standard configuration used 8080](https://raw.githubusercontent.com/apache/tomcat/main/conf/server.xml), and later tools such as Jenkins helped make the number familiar across Java-based development.  
+Variations of these came around with 8000 Python HTTP server and 8888 Jupyter notebook which all seemed to follow a variation of this 80 convention.
+
+
+## Port 5173
+By the time Vite came around, conventional ports were dominating the ports market. 3000 was like the Michael Jordan of ports at that point. But Vite was ready to make a new entry with port 5173. And it came from a clever word play:  
+- 51 = VI (technically VI is 6 in roman numbers but let's fly over this)  
+- 73 = TE  
+i.e. [VITE](https://www.reddit.com/r/programming/comments/xh1vyr/fun_fact_vites_default_port_is_5173_which_spells/). So geeky and so clever. I wanna live in a world where VITE gets to name things, that would be so much more fun. 5173 might probably not be as popular as 3000, but certainly just as memorable for those that know the story behind it.
+
+
+## Port 6379
+I was born and grew up in Italy, but until a couple of years ago I did not know that the founder of Redis was also Italian: Salvatore Sanfilippo. Once I learned that, I wanted to learn so much about him, because it is rare that such a widely used piece of software like Redis comes from the country that is usually more well known for spaghetti than reliable internet connectivity.  
+Along my search, I learned that Redis standard port is 6379. That sounds pretty random but the reason is strangely fun: if you type 6379 on a phone, that gives you "Merz". This comes from [Alessia Merz](https://en.wikipedia.org/wiki/Alessia_Merz), an Italian model, that among Salvatore and his friends became synonym for "stupidity". ["But then with some time the meaning shifted in something stupid as pointless"](https://oldblog.antirez.com/post/redis-as-LRU-cache.html). So I guess using the default Redis port 6379 is... pointless? 
+
+
+## Port 31337 and 1337
+Ports 31337 and 1337 also became somewhat famous ports because of their leetspeak of "elite" and "leet" respectively, and became associated with the hacker culture as a result. A lot of projects that wanted to associated themselves with the hacker culture adopted this port number as an implicit nudge.  
+This not unexpectedly attracted some malwares to this port such as ShadyShell trojan that would [establish backdoor access to infected systems](https://www.auditmypc.com/tcp-port-1337.asp).
+
+
+## The ports Schelling point 
+I would like to think that things have a reason. But probably the truth is that oftentimes they don't. During this rabbit hole, when looking for a port number history, the most common chain of results was: I know that port N was used by protocol X. Protocol X likely took it from protocol Y. Protocol Y possibly took it from protocol Z. And then silence. It just appeared that at some point somebody just picked it but and it gained steam. This was the case for ports like 3000, and 5000 for example.  
+This convinced me that port numbers might be a variation of the classic [Schelling point](https://nav.al/schelling-point) applied to computer scientists. That is, there are not that many people in early development that were popularizing and exposing these ports. The first used 3000 and whoever followed, being rational, had no reason to believe valuable to change the port. If the first person chose 3000 there must have been a rational reason, he might have thought. Changing the number might expose you to unnecessary errors, so let me just stick to this.  
+This is also what probably makes it so hard to trace back the history of these ports. Because it's not a clear log of one protocol inspiring the next but more so many rational people all converging to the same answer at once and agreeing on it even if they didn't necessarily communicate with each other.   
+For example, for port 3000, maybe out of respect, or maybe indifference, or maybe simplicity Node.js, Next.js, React and others used the same 3000 convention adopted by the predecessors, which contributed to the popularization of it. It must have been from a time when people still read the documentation of software so the Node.js line:  
+```app.listen(3000, () => console.log('Server running on port 3000'));```  
+must have been an incredible 3000 evangeliser. And I bet the lazy bootcamps that were flourishing in those days did not have any creative drive to change up that port number with something more unconventional which probably made it spread even more quickly.  
+In any case, this was a fun topic to delve into, and while it was not particularly practical, if there is one thing I took from this is that next time I spin up a port, I will think of something more memorable than the dull default port numbers. Maybe something like port 7373 for the [Chuck Norris of ports](https://www.youtube.com/watch?v=RyFr279K9TE), or 27182 if the project starts with e.
+
+If you enjoyed this, you can [subscribe on Substack](https://substack.com/@openeverything) or [subscribe via RSS](https://smarmelling.com/feed.xml).
+
+> Disclaimer: it is possible that some of the information I found is inaccurate or incomplete, in which case I will do my best to update the contents as appropriate. 

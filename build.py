@@ -193,6 +193,7 @@ def index_html(posts):
     <!-- <p class="intro">{INTRO}</p> -->
     <!-- <p class="more-link"><a href="archive/more.html">more</a></p> -->
     <p class="more-link"><a href="feed.xml">rss</a></p>
+    <p class="more-link"><a href="https://substack.com/@openeverything">substack</a></p>
 {post_list}
   </div>
 </body>
