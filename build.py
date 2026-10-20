@@ -13,7 +13,7 @@ What it does:
     - Parses front matter (title and date fields)
     - Converts the markdown body to HTML
     - Writes posts/{slug}.html for each post
-    - Regenerates index.html with posts sorted newest first
+    - Leaves index.html untouched; maintain the homepage manually
 
 File naming: use lowercase-hyphenated names, e.g. my-first-post.md
 The filename (without .md) becomes the URL slug.
@@ -192,8 +192,7 @@ def index_html(posts):
     <div class="site-name"><a href="index.html">&lt;smarmelling&gt;</a></div>
     <!-- <p class="intro">{INTRO}</p> -->
     <!-- <p class="more-link"><a href="archive/more.html">more</a></p> -->
-    <p class="more-link"><a href="feed.xml">rss</a></p>
-    <p class="more-link"><a href="https://substack.com/@openeverything">substack</a></p>
+    <p class="more-link"><a href="feed.xml">rss</a> / <a href="https://substack.com/@openeverything">substack</a>
 {post_list}
   </div>
 </body>
@@ -288,10 +287,6 @@ def main():
         )
 
     posts.sort(key=lambda p: p["date"], reverse=True)
-
-    (ROOT / "index.html").write_text(index_html(posts), encoding="utf-8")
-    n = len(posts)
-    print(f"  wrote  index.html  ({n} post{'s' if n != 1 else ''})")
 
     (ROOT / "feed.xml").write_text(feed_xml(posts), encoding="utf-8")
     print(f"  wrote  feed.xml")
